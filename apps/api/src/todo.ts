@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { type Context, Hono } from "hono";
 import { z } from "zod";
 
 // Todoスキーマの定義
@@ -22,10 +22,19 @@ const UpdateTodoSchema = z.object({
 
 type Todo = z.infer<typeof TodoSchema>;
 
-let todos: Todo[] = [
-  { id: "1", title: "Buy groceries", completed: false },
-  { id: "2", title: "Buy groceries", completed: false },
-];
+let todos: Todo[] = [];
+
+// JSON 入力型としてスキーマを指定
+type UpdateJsonIn = z.input<typeof UpdateTodoSchema>;
+
+// Context に型パラメータをセット
+type UpdateContext = Context<
+  Record<string, never>,
+  "/:id",
+  {
+    in: { json: UpdateJsonIn };
+  }
+>;
 
 const todoApp = new Hono()
 
@@ -56,17 +65,16 @@ const todoApp = new Hono()
     }
   })
 
-  .put("/:id", async (c) => {
+  .put("/:id", async (c: UpdateContext) => {
     try {
+      const body = await c.req.json();
       const { id } = c.req.param();
+
       const todo = todos.find((todo) => todo.id === id);
       if (!todo) {
         return c.json({ error: "Todo not found" }, 404);
       }
-
-      const body = await c.req.json();
       const validatedData = UpdateTodoSchema.parse(body);
-
       // 更新するフィールドを適用
       Object.assign(todo, validatedData);
 
