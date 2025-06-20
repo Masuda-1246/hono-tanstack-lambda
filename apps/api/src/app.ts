@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Hono } from 'hono/quick';
 import { createBasicAuthMiddleware } from "./middleware/basicAuth";
 import { staticMiddleware } from "./middleware/static";
 import { todoApp } from "./todo";

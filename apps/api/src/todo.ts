@@ -1,4 +1,5 @@
-import { type Context, Hono } from "hono";
+import { type Context } from "hono";
+import { Hono } from "hono/quick";
 import { z } from "zod";
 
 // Todoスキーマの定義
