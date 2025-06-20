@@ -1,4 +1,3 @@
-import { join } from "node:path";
 import { serveStatic } from "@hono/node-server/serve-static";
 import type { MiddlewareHandler } from "hono";
 
@@ -13,7 +12,7 @@ export const staticMiddleware = (
   const assets: MiddlewareHandler = serveStatic({ root: distPath });
 
   // SPA用フォールバックミドルウェア
-  const fallback: MiddlewareHandler = serveStatic({ path: join(distPath, "index.html") });
+  const fallback: MiddlewareHandler = serveStatic({ path: `${distPath}/index.html` });
 
   return { assets, fallback };
 };

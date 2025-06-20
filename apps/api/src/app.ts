@@ -10,12 +10,10 @@ const basicAuthMiddleware = createBasicAuthMiddleware();
 app.use("*", basicAuthMiddleware);
 
 // APIのルーティング
-const api = new Hono().route("/todo", todoApp).get("/users", (c) => {
-  return c.json([{ name: "John Doe" }, { name: "Jane Hoge" }]);
-});
+const api = new Hono().basePath("/api").route("/todo", todoApp);
 
 // APIのルーティングを適用
-app.route("/api", api);
+app.route("", api);
 
 // フロントの配信
 const { assets, fallback } = staticMiddleware("./public");
