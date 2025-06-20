@@ -16,7 +16,10 @@ export const useCreateTodo = () => {
 	return useMutation({
 		mutationFn: (todo: { title: string; completed: boolean }) =>
 			client.api.todo.$post({
-				json: todo,
+				json: {
+					title: todo.title,
+					completed: todo.completed,
+				}
 			}),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey });
@@ -30,7 +33,10 @@ export const useUpdateTodo = () => {
 		mutationFn: (todo: { id: string; title: string; completed: boolean }) =>
 			client.api.todo[":id"].$put({
 				param: { id: todo.id },
-				json: todo,
+				json: {
+					title: todo.title,
+					completed: todo.completed,
+				},
 			}),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey });

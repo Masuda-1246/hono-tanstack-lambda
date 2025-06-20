@@ -28,6 +28,15 @@ let todos: Todo[] = [];
 // JSON 入力型としてスキーマを指定
 type UpdateJsonIn = z.input<typeof UpdateTodoSchema>;
 
+type CreateJsonIn = z.input<typeof CreateTodoSchema>;
+
+type CreateContext = Context<
+  Record<string, never>,
+  "/",
+  {
+    in: { json: CreateJsonIn };
+  }
+>;
 // Context に型パラメータをセット
 type UpdateContext = Context<
   Record<string, never>,
@@ -43,7 +52,7 @@ const todoApp = new Hono()
     return c.json(todos);
   })
 
-  .post("/", async (c) => {
+  .post("/", async (c: CreateContext) => {
     try {
       const body = await c.req.json();
       const validatedData = CreateTodoSchema.parse(body);
