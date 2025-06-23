@@ -2,6 +2,7 @@ import { Hono } from 'hono/quick';
 import { createBasicAuthMiddleware } from "./middleware/basicAuth";
 import { staticMiddleware } from "./middleware/static";
 import { todoApp } from "./todo";
+import { s3App } from "./s3";
 
 const app = new Hono();
 
@@ -10,7 +11,7 @@ const basicAuthMiddleware = createBasicAuthMiddleware();
 app.use("*", basicAuthMiddleware);
 
 // APIのルーティング
-const api = new Hono().basePath("/api").route("/todo", todoApp);
+const api = new Hono().basePath("/api").route("/todo", todoApp).route("/s3", s3App);
 
 // APIのルーティングを適用
 app.route("", api);
